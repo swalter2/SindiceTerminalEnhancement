@@ -10,9 +10,9 @@
     			<input type="radio" name="type" value="key" checked> resources containing search term<br>
     			<input type="radio" name="type" value="sub"> subclasses of those resources<br>
     			<input type="radio" name="type" value="super"> superclasses of those resources
-				<input type="hidden" name="page" value="1">
+                        <input type="hidden" name="page" value="-1">                                
   			</p>
-			<p><input type="submit" /></p>
+			<p><input type="submit" value="search"/></p>
 		</form>
 		</div>
 	</body>
