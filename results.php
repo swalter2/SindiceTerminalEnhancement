@@ -15,17 +15,18 @@
                         $filter = $_GET['filter'];
 			$output = `$command $keyword $type $page $filter`;                        
 			$json = json_decode($output, true);
+                        $num_results = $json['totalResults'];
                         
-                        if ($page != "-1") {
-                            $num_results = $json['totalResults'];
-                            echo "Search results for keyword <b>$keyword</b> <br> total: $num_results <br><br>page $page <br><br>";
+                        if ($page != "-1") {                            
+                            echo "Search results for keyword <b>$keyword</b> <br>";
+                            echo "domain: <b>$filter</b><br>";
+                            echo "total: $num_results <br><br>page $page <br><br>";
                             foreach($json['entries'] as $i) {
                                 $filename = $i['link'];
                                 $link = "<a href='$filename'> $filename </a><br />";
                                 echo $link;
                                 echo "<br>";
                             }
-
                             $num_pages = min(100, ceil($num_results/10));
                             $next = intval($page) + 1;
                             $previous = intval($page) - 1;
@@ -44,14 +45,17 @@
                                 echo "next ";
                                 echo "last";
                             }
-                            echo "<br>";
-                            echo "<a href='index.php'>back to search</a>";
+                            echo "<br><a href='index.php'>back to search</a>";
                         } else {
-                            echo "Choose ontology: <br>";
-                            foreach(array_keys($json) as $k) {
-                                echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k'> $k </a>";
+                            if (count($json) == 0) {
+                                echo "No matching resources found.";
+                            } else {
+                                echo "Choose ontology: <br>";
+                                foreach(array_keys($json) as $k) {
+                                    echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k'> $k </a>";
+                                }
                             }
-                            
+                            echo "<br><br><a href='index.php'>back to search</a>";                            
                         }
 
 		?>
