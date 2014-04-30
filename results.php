@@ -13,9 +13,16 @@
 			$type = $_GET['type'];
 			$page = $_GET['page'];
                         $filter = $_GET['filter'];
-			$output = `$command $keyword $type $page $filter`;                        
+                        $labels = "";
+                        $labels_param = "";
+                        if (isset($_GET['mode'])) {
+                            $labels = "labels";
+                            $labels_param = "&mode=labels";
+                        }
+			$output = `$command $keyword $type $page $filter $labels`;                        
 			$json = json_decode($output, true);
                         $num_results = $json['totalResults'];
+                        
                         
                         if ($page != "-1") {                            
                             echo "Search results for keyword <b>$keyword</b> <br>";
@@ -32,15 +39,15 @@
                             $previous = intval($page) - 1;
                             echo "<br>";
                             if ($page > 1) { 
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=1'>first</a> "; 
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$previous'>previous</a> ";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=1$labels_param'>first</a> "; 
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$previous$labels_param'>previous</a> ";
                             } else {
                                 echo "first ";
                                 echo "previous ";
                             }
                             if ($page < $num_pages) {
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$next'>next</a> ";
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$num_pages'>last</a>";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$next$labels_param'>next</a> ";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$num_pages$labels_param'>last</a>";
                             } else {
                                 echo "next ";
                                 echo "last";
@@ -50,9 +57,12 @@
                             if (count($json) == 0) {
                                 echo "No matching resources found.";
                             } else {
+                                session_start();
+                                $_SESSION['results'] = $json;
                                 echo "Choose ontology: <br>";
                                 foreach(array_keys($json) as $k) {
-                                    echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k'> $k </a>";
+                                    echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k$labels_param'>$k</a>";
+                                    echo " <a href='download.php?domain=$k'>download</a>";
                                 }
                             }
                             echo "<br><br><a href='index.php'>back to search</a>";                            

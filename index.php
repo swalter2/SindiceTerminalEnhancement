@@ -12,6 +12,7 @@
     			<input type="radio" name="type" value="super"> superclasses of those resources
                         <input type="hidden" name="page" value="-1">                                
   			</p>
+                        <input type="checkbox" name="mode" value="labels"> only include resources containing keyword in label<br>
 			<p><input type="submit" value="search"/></p>
 		</form>
 		</div>

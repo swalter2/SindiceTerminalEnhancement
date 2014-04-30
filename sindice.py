@@ -9,17 +9,24 @@ rf = 'json'
 fq = 'format:RDF'
 subclass_query= s+' '+p+' '+o
 superclass_query= o_br+' '+p+' '+s
+labels_query='* <label>'+o
 url = 'http://api.sindice.com/v3/search'
 parameters = {'field':'domain', 'format':rf, 'fq':fq, 'page':sys.argv[3]}
 
 if len(sys.argv) > 4:
-	parameters['fq'] = parameters['fq']+' domain:'+sys.argv[4]
+	if sys.argv[4] == 'filter':
+		parameters['fq'] = parameters['fq']+' domain:'+sys.argv[4]
+	if sys.argv[4] == 'labels':
+		parameters['nq'] = labels_query
+if len(sys.argv) > 5:
+	parameters['nq'] = labels_query
 if sys.argv[2] == 'sub':
 	parameters['nq'] = subclass_query
 elif sys.argv[2] == 'super':
 	parameters['nq'] = superclass_query
 elif sys.argv[2] == 'key':
-	parameters['q'] = q	
+	if not parameters.has_key('nq'):
+		parameters['q'] = q	
 
 if sys.argv[3] != '-1':
 	results = requests.get(url, params=parameters)
