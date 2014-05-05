@@ -12,17 +12,29 @@
 			$keyword = $_GET['keyword'];
 			$type = $_GET['type'];
 			$page = $_GET['page'];
-                        $filter = $_GET['filter'];
-                        $labels = "";
-                        $labels_param = "";
+                        
+                        if (isset($_GET['filter'])) {
+                            $filter = $_GET['filter'];
+                        } else {
+                            $filter = "";
+                        }                          
                         if (isset($_GET['mode'])) {
                             $labels = "labels";
                             $labels_param = "&mode=labels";
+                        } else {
+                           $labels = "";
+                            $labels_param = ""; 
                         }
+                        
 			$output = `$command $keyword $type $page $filter $labels`;                        
 			$json = json_decode($output, true);
-                        $num_results = $json['totalResults'];
+                        $num_results = 0;
                         
+                        if (array_key_exists('totalResults', $json)) {
+                            $num_results = $json['totalResults'];
+                        } else {
+                            $num_results = 0;
+                        }                
                         
                         if ($page != "-1") {                            
                             echo "Search results for keyword <b>$keyword</b> <br>";
