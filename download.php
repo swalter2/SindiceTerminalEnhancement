@@ -47,6 +47,6 @@
     header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename=results.zip');
     header('Content-Length: ' . filesize($name));
-    readfile("/var/www/html/".$name);
-    unlink("/var/www/html/".$name);
+    readfile($name);
+    unlink($name);
 ?>
