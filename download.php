@@ -10,17 +10,23 @@
     
     foreach ($links as $l) {
         $query = "http://api.sindice.com/v2/live?url=".$l;
-        $tmp = json_decode(file_get_contents($query), true);
-        $tuples = "";
-        foreach ($tmp['extractorResults']['metadata']['explicit']['bindings'] as $b) {
-            $s = $b['s']['value'];
-            $p = $b['p']['value'];
-            $o = $b['o']['value'];
-            $tmp = $s."\t".$p."\t".$o."\n";
-            $tuples = $tuples.$tmp;
+        $tmp = @file_get_contents(urldecode($query));
+        if ($tmp !== FALSE) {
+            $json = json_decode($tmp, true);
+            $tuples = "";
+            if ($json !== NULL) {
+                foreach ($json['extractorResults']['metadata']['explicit']['bindings'] as $b) {
+                    $s = $b['s']['value'];
+                    $p = $b['p']['value'];
+                    $o = $b['o']['value'];
+                    $t = $s."\t".$p."\t".$o."\n";
+                    $tuples = $tuples.$t;
+                }
+                $n = split("/",$l);
+                $ret->addFromString($n[sizeof($n)-1], $tuples);    
+            }
         }
-        $n = split("/",$l);
-        $ret->addFromString($n[sizeof($n)-1], $tuples);
+        
     }
     
     

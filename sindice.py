@@ -14,9 +14,9 @@ url = 'http://api.sindice.com/v3/search'
 parameters = {'field':'domain', 'format':rf, 'fq':fq, 'page':sys.argv[3]}
 
 if len(sys.argv) > 4:
-	if sys.argv[4] == 'filter':
+	if sys.argv[4] != 'labels':
 		parameters['fq'] = parameters['fq']+' domain:'+sys.argv[4]
-	if sys.argv[4] == 'labels':
+	else:
 		parameters['nq'] = labels_query
 if len(sys.argv) > 5:
 	parameters['nq'] = labels_query

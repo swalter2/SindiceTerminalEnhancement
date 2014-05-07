@@ -25,12 +25,11 @@
                            $labels = "";
                             $labels_param = ""; 
                         }
-                        
 			$output = `$command $keyword $type $page $filter $labels`;                        
 			$json = json_decode($output, true);
                         $num_results = 0;
                         
-                        if (array_key_exists('totalResults', $json)) {
+                        if ($json != NULL && array_key_exists('totalResults', $json)) {
                             $num_results = $json['totalResults'];
                         } else {
                             $num_results = 0;
