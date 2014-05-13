@@ -44,7 +44,6 @@ else:
 		results = requests.get(url, params=parameters).json()	
 		for r in results['entries']:
 			if domain_map.has_key(r['domain']):
-				domain_map[r['domain']].append(r['link'])
 			else:
 				domain_map[r['domain']] = [r['link']]
 
