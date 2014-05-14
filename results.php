@@ -7,8 +7,8 @@
 	</head>
 	<body>
 		<?php
-
-			$command = "python sindice.py";
+                        session_start();
+			$script = "python sindice.py";
 			$keyword = $_GET['keyword'];
 			$type = $_GET['type'];
 			$page = $_GET['page'];
@@ -22,11 +22,17 @@
                             $labels = "labels";
                             $labels_param = "&mode=labels";
                         } else {
-                           $labels = "";
+                            $labels = "";
                             $labels_param = ""; 
                         }
-			$output = `$command $keyword $type $page $filter $labels`;                        
-			$json = json_decode($output, true);
+                        $command = $script." ".$keyword." ".$type." ".$page." ".$filter." ".$labels;
+                        if ($page != "-1" || (isset($_SESSION['cmd']) && $_SESSION['cmd'] != $command)) {
+                            $output = `$command`;                        
+                            $json = json_decode($output, true);
+                        } else {
+                            if (isset($_SESSION['results'])) $json = $_SESSION['results'];
+                        }
+			
                         $num_results = 0;
                         
                         if ($json != NULL && array_key_exists('totalResults', $json)) {
@@ -68,15 +74,15 @@
                             if (count($json) == 0) {
                                 echo "No matching resources found.";
                             } else {
-                                session_start();
                                 $_SESSION['results'] = $json;
+                                $_SESSION['cmd'] = $command;
                                 echo "Choose ontology: <br>";
                                 foreach(array_keys($json) as $k) {
                                     echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k$labels_param'>$k</a>";
                                     echo " <a href='download.php?domain=$k'>download</a>";
                                 }
                             }
-                            echo "<br><br><a href='index.php'>back to search</a>";                            
+                            echo "<br><br><a href='index.php'>back to search</a>";  
                         }
 
 		?>

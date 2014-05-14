@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<div id="form">
-		<form action="results.php" method="get">
+		<form action="results.php" method="get" accept-charset="UTF-8">
 			<p>search term: <input type="text" name="keyword" /></p>
 			<p>search for <br>
     			<input type="radio" name="type" value="key" checked> resources containing search term<br>
