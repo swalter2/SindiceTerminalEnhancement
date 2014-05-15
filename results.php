@@ -15,8 +15,10 @@
                         
                         if (isset($_GET['filter'])) {
                             $filter = $_GET['filter'];
+                            $filter_param = "&filter=$filter";
                         } else {
                             $filter = "";
+                            $filter_param = "";
                         }                          
                         if (isset($_GET['mode'])) {
                             $labels = "labels";
@@ -56,15 +58,15 @@
                             $previous = intval($page) - 1;
                             echo "<br>";
                             if ($page > 1) { 
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=1$labels_param'>first</a> "; 
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$previous$labels_param'>previous</a> ";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=1$filter_param$labels_param'>first</a> "; 
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$previous$filter_param$labels_param'>previous</a> ";
                             } else {
                                 echo "first ";
                                 echo "previous ";
                             }
                             if ($page < $num_pages) {
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$next$labels_param'>next</a> ";
-                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$num_pages$labels_param'>last</a>";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$next$filter_param$labels_param'>next</a> ";
+                                echo "<a href='results.php?keyword=$keyword&type=$type&page=$num_pages$filter_param$labels_param'>last</a>";
                             } else {
                                 echo "next ";
                                 echo "last";
