@@ -32,7 +32,12 @@
                             $output = `$command`;                        
                             $json = json_decode($output, true);
                         } else {
-                            if (isset($_SESSION['results'])) $json = $_SESSION['results'];
+                            if (isset($_SESSION['results'])) {
+                                $json = $_SESSION['results'];
+                            } else {
+                                $output = `$command`;                        
+                                $json = json_decode($output, true);
+                            }
                         }
 			
                         $num_results = 0;
@@ -81,7 +86,7 @@
                                 echo "Choose ontology: <br>";
                                 foreach(array_keys($json) as $k) {
                                     echo "<br><a href='results.php?keyword=$keyword&type=$type&page=1&filter=$k$labels_param'>$k</a>";
-                                    echo " <a href='download.php?domain=$k'>download</a>";
+                                    echo " <a href='download.php?keyword=$keyword&type=$type&page=-1&filter=$k$labels_param'>download</a>";
                                 }
                             }
                             echo "<br><br><a href='index.php'>back to search</a>";  
