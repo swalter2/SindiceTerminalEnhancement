@@ -16,7 +16,7 @@ How to use the search
 1. Enter a keyword into the search field
 2. Choose an option: 
 	- "resources containing search term" returns resources containing the keyword in the URI or the document itself
-            - Check "only include resources containing keyword in label" to get only resources having a label predicate set to the keyword
+        - Check "only include resources containing keyword in label" to get only resources having a label predicate set to the keyword
 	- "subclasses of those resources" returns resources containing a triple conforming to the pattern "* <subClassOf> keyword"
 	- "subclasses of those resources" returns resources containing a triple conforming to the pattern "keyword <subClassOf> *"
 3. Press search
