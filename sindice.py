@@ -43,37 +43,39 @@ else:
                 path = 'results.zip'
                 if os.path.exists(path): os.remove(path)
                 zip = zipfile.ZipFile(path, 'a')
-
 		for i in range(1, pages+1):
 			parameters['page'] = str(i)
 			try: results = requests.get(url, params=parameters).json()
                         except ValueError, e: continue
-			if results.has_key('error'):
-				if '[500]' in results['error']: continue
-                        	elif '[406]' in results['error']:
-                        		time.sleep(1)
-                        		try: results = requests.get(url, params=parameters).json()
-                        		except ValueError, e: continue
-
-			for r in results['entries']:
-                                link = 'http://api.sindice.com/v2/live?url='+r['link']
-                                print(link)
-                                try: tmp = requests.get(link).json()
-                                except ValueError, e: continue
-                                if tmp.has_key('error'):
-                                    if '[500]' in tmp['error']: continue
-                                    elif '[406]' in tmp['error']:
-                                        time.sleep(1)
-                                        try: tmp = requests.get(link).json()
-                                        except ValueError, e: continue
-                                ttuples = ''
-                                for b in tmp['extractorResults']['metadata']['explicit']['bindings']:
-                                    ts = b['s']['value']
-                                    tp = b['p']['value']
-                                    to = b['o']['value']
-                                    tt = ts+"\t"+tp+"\t"+to+"\n"
-                                    ttuples = ttuples+tt
-                                zip.writestr(r['link'][7:].replace('/', '_')+'.txt', ttuples.encode('utf8'))
+			t = 0.2
+			while results.has_key('error') and '[406]' in results['error']:
+				time.sleep(t)
+				t = t + 0.1                        	
+				try: results = requests.get(url, params=parameters).json()
+                        	except ValueError, e: break
+			try:
+				for r in results['entries']:
+        	                        link = 'http://api.sindice.com/v2/live?url='+r['link']
+        	                        print(link)
+        	                        try: tmp = requests.get(link).json()
+        	                        except ValueError, e: continue
+					t = 0.2
+        	                        while tmp.has_key('error') and '[406]' in tmp['error']:				    
+        	                            time.sleep(t)
+					    t = t + 0.1
+        	                            try: tmp = requests.get(link).json()
+        	                            except ValueError, e: break
+					try:
+        	                        	ttuples = ''
+        	                        	for b in tmp['extractorResults']['metadata']['explicit']['bindings']:
+        	                        	  	ts = b['s']['value']
+        	                         		tp = b['p']['value']
+        	                            		to = b['o']['value']
+        	                            		tt = ts+"\t"+tp+"\t"+to+"\n"
+        	                            		ttuples = ttuples+tt
+        	                        	zip.writestr(r['link'][7:].replace('/', '_')+'.txt', ttuples.encode('utf8'))
+					except KeyError, e: continue
+			except KeyError, e: continue
                 zip.close()
 
         else:
